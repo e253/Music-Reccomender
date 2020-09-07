@@ -29,6 +29,7 @@ def get_songs(metadata, artist):
 
 
 '''Loads Stuff'''
+
 if __name__ == '__main__':
     print('Loading Vectors/Metadata/Model')
 t0 = time.time()
