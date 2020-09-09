@@ -22,7 +22,7 @@ for song in oldies_songs:
     popular['Indie Similars'].append(CondKNN.query_by_title(CondKNN.indie, song, 'indie'))
     popular['Pop Similars'].append(CondKNN.query_by_title(CondKNN.pop, song, 'pop'))
     popular['Alternative Similars'].append(CondKNN.query_by_title(CondKNN.alternative, song, 'alternative'))
-    #popular['General Similars'].append(CondKNN.query_by_title(CondKNN.reg, song))
+    popular['General Similars'].append(CondKNN.query_by_title(CondKNN.reg, 'None', song))
 for song in newer_songs:
     popular['Song'].append(song)
     popular['Rock Similars'].append(CondKNN.query_by_title(CondKNN.rock, song, 'rock'))
@@ -31,8 +31,8 @@ for song in newer_songs:
     popular['Indie Similars'].append(CondKNN.query_by_title(CondKNN.indie, song, 'indie'))
     popular['Pop Similars'].append(CondKNN.query_by_title(CondKNN.pop, song, 'pop'))
     popular['Alternative Similars'].append(CondKNN.query_by_title(CondKNN.alternative, song, 'alternative'))
-    #popular['General Similars'].append(CondKNN.query_by_title(CondKNN.reg, song))
-
+    popular['General Similars'].append(CondKNN.query_by_title(CondKNN.reg, 'None', song))
+'''
 for song in songs_rand:
     rand['Song'].append(song)
     rand['Rock Similars'].append(CondKNN.query_by_title(CondKNN.rock, song, 'rock'))
@@ -42,17 +42,14 @@ for song in songs_rand:
     rand['Pop Similars'].append(CondKNN.query_by_title(CondKNN.pop, song, 'pop'))
     rand['Alternative Similars'].append(CondKNN.query_by_title(CondKNN.alternative, song, 'alternative'))
     #rand['General Similars'].append(CondKNN.query_by_title(CondKNN.reg, song))
-
+'''
 
 popular = pd.DataFrame(popular)
 print(popular)
 
-#popular.to_csv('popular+.csv')
-popular.to_html('popular+.html')
-rand = pd.DataFrame(rand)
-print(rand)
-#rand.to_csv('rand1.csv')
-rand.to_html('rand1.html')
+popular.to_csv('L2Norm-ALS.csv')
+popular.to_html('L2Norm-ALS.html')
+
 '''
 
 

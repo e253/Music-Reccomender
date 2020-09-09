@@ -35,23 +35,23 @@ if __name__ == '__main__':
     print('Loading Vectors/Metadata/Model')
 t0 = time.time()
 data = pd.read_csv('/mnt/work/Music_Proj/metadata.csv', index_col=[0])
-vecs = np.load('L2Norm_ALS_vecs.npy')
+vecs = np.load('/mnt/work/Music_Proj/ALS-L2Norm/L2Norm-ALS_vecs.npy')
 metadata = utils.create_metadata(data, vecs)
 metric = 'dot'
 reg = AnnoyIndex(32, metric)
-reg.load('/mnt/work/Music_Proj/annoy.ann')
+reg.load('/mnt/work/Music_Proj/ALS-L2Norm/L2Norm-ALS_None2.ann')
 rock = AnnoyIndex(32, metric)  
-rock.load('/mnt/work/Music_Proj/rock.ann')
+rock.load('/mnt/work/Music_Proj/ALS-L2Norm/L2Norm-ALS_rock.ann')
 pop = AnnoyIndex(32, metric)
-pop.load('/mnt/work/Music_Proj/pop.ann')
+pop.load('/mnt/work/Music_Proj/ALS-L2Norm/L2Norm-ALS_pop.ann')
 indie = AnnoyIndex(32, metric)
-indie.load('/mnt/work/Music_Proj/indie.ann')
+indie.load('/mnt/work/Music_Proj/ALS-L2Norm/L2Norm-ALS_indie.ann')
 female_vocalists = AnnoyIndex(32, metric)
-female_vocalists.load('/mnt/work/Music_Proj/female vocalists.ann')
+female_vocalists.load('/mnt/work/Music_Proj/ALS-L2Norm/L2Norm-ALS_female vocalists.ann')
 electronic = AnnoyIndex(32, metric)
-electronic.load('/mnt/work/Music_Proj/electronic.ann')
+electronic.load('/mnt/work/Music_Proj/ALS-L2Norm/L2Norm-ALS_electronic.ann')
 alternative = AnnoyIndex(32, metric)
-alternative.load('/mnt/work/Music_Proj/alternative.ann')
+alternative.load('/mnt/work/Music_Proj/ALS-L2Norm/L2Norm-ALS_alternative.ann')
 
 t1 = time.time()
 if __name__ == '__main__':
@@ -59,14 +59,14 @@ if __name__ == '__main__':
 '''Loads Stuff'''
 
 
-def query_by_title(annoy, title, filt=None, match_num=0):
+def query_by_title(annoy, title, filt, match_num=0):
     # Gets Vector for Song Name
     vec = get_vec_from_title(metadata, title)
     # Gets Nearest Neighbors
     similar_vecs_index = annoy.get_nns_by_vector(vec, match_num+1)[match_num]
     # Gets Names of Nearest Neighbors
     
-    if filt:
+    if filt != 'None':
         title, name = get_title_and_artist_from_index(metadata.loc[metadata['tags'].apply(lambda tags: filt in tags)].reset_index(), int(similar_vecs_index))
     else:
         title, name = get_title_and_artist_from_index(metadata, int(similar_vecs_index))
@@ -94,8 +94,9 @@ if __name__ == '__main__':
 
     while True:
         try:
-            inpt = input("Type Artist Name\n")
-            print(query_by_artist(rock, 'rock', inpt))
+            Artist = input("Type Artist Name\n")
+            Filter = input("Type Filter or 'None' for no filter\n")
+            print(query_by_artist(rock, Filter, Artist))
         except (KeyError, ValueError):
             print("Name not found, try again")
 

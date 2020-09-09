@@ -9,19 +9,15 @@ import utils
 print('Loading Dictionaries/Arrays')
 t0 = time.time()
 data = pd.read_csv('/mnt/work/Music_Proj/metadata.csv', index_col=[0])
-vecs = np.load('/mnt/work/Music_Proj/L2Norm_ALS_vecs.npy')
+vecs = np.load('/mnt/work/Music_Proj/ALS-L2Norm/L2Norm-ALS_vecs.npy')
 metadata = utils.create_metadata(data, vecs)
-tags = pd.read_csv('lastfm_unique_tags.txt', delimiter='\t', nrows=5)
-tags.columns = ['tags', 'frequency']
-tags.drop(columns=['frequency'])
-tags.to_csv('tags.csv')
 
-for tag in ['rock', 'pop', 'alternative', 'indie', 'electronic', 'female vocalists', 'None']:
+for tag in ['pop', 'rock', 'alternative', 'indie', 'electronic', 'female vocalists', 'None']:
     print('Making Index for tag: {}'.format(tag))
     time.sleep(2)
     if tag != 'None':
         metadata['has_{}'.format(tag)] = metadata['tags'].apply(lambda tags: '{}'.format(tag) in tags)
-        song_vecs = metadata.loc[metadata['has_{}'.format(tag)], [str(i) for i in range(32)]].values
+        song_vecs = metadata.loc[metadata['has_{}'.format(tag)], [i for i in range(32)]].values
     else:
         song_vecs = vecs
 
@@ -38,8 +34,14 @@ for tag in ['rock', 'pop', 'alternative', 'indie', 'electronic', 'female vocalis
         annoy.add_item(ind, song_vecs[ind])
     annoy.build(trees)
     t1 = time.time()
-    print('Finished NN fit\n{0} seconds'.format(t1-t0))
+    print('Finished NN fit in {0} seconds'.format(t1-t0))
     print('Saving...')
-    annoy.save('L2Norm-ALS_{}.ann'.format(tag))
+    annoy.save('L2Norm-ALS_{}-test.ann'.format(tag))
     time.sleep(2)
-    print('Done.\n\n')
+    test = AnnoyIndex(32, 'dot')
+    try: 
+        test.load('L2Norm-ALS_{}-test.ann'.format(tag))
+        print('{0} a success!'.format(tag))
+    except OSError:
+        print('{0} failed'.format(tag))
+    print('Done.\n')

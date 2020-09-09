@@ -3,6 +3,7 @@ from scipy.sparse import coo_matrix
 import numpy as np
 import implicit
 from implicit.nearest_neighbours import bm25_weight
+from implicit.nearest_neighbours import BM25Recommender
 import pickle
 import time
 from tqdm import tqdm
