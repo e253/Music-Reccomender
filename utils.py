@@ -4,6 +4,7 @@ import os.path
 from annoy import AnnoyIndex
 import time
 from tqdm import tqdm
+from sklearn.preprocessing import normalize
 
 def setup():
     metadata = get_data()
@@ -46,3 +47,10 @@ def create_indicies(metadata, tags=['alternative', 'rock', 'electronic', 'indie'
         print('Saving...')
         annoy.save('{}.ann'.format(tag))
         print('Done.\n\n')
+
+
+def create_metadata(metadata, vecs):
+    vecdf = pd.DataFrame(vecs)
+    vecdf['vec_ind'] = [i for i in range(len(vecs))]
+    return pd.merge(metadata, vecdf, on='vec_ind')
+

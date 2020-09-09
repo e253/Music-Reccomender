@@ -4,6 +4,7 @@ import pandas as pd
 from tabulate import tabulate
 from annoy import AnnoyIndex
 import pickle as pkl
+import utils
 
 '''Helpers'''
 def get_vec_from_title(metadata, title):
@@ -33,22 +34,24 @@ def get_songs(metadata, artist):
 if __name__ == '__main__':
     print('Loading Vectors/Metadata/Model')
 t0 = time.time()
-metadata = pd.read_csv('meta_with_vecs.csv', index_col=[0])
-
-reg = AnnoyIndex(32, 'angular')
-reg.load('annoy.ann')
-rock = AnnoyIndex(32, 'angular')  
-rock.load('rock.ann')
-pop = AnnoyIndex(32, 'angular')
-pop.load('pop.ann')
-indie = AnnoyIndex(32, 'angular')
-indie.load('indie.ann')
-female_vocalists = AnnoyIndex(32, 'angular')
-female_vocalists.load('female vocalists.ann')
-electronic = AnnoyIndex(32, 'angular')
-electronic.load('electronic.ann')
-alternative = AnnoyIndex(32, 'angular')
-alternative.load('alternative.ann')
+data = pd.read_csv('/mnt/work/Music_Proj/metadata.csv', index_col=[0])
+vecs = np.load('L2Norm_ALS_vecs.npy')
+metadata = utils.create_metadata(data, vecs)
+metric = 'dot'
+reg = AnnoyIndex(32, metric)
+reg.load('/mnt/work/Music_Proj/annoy.ann')
+rock = AnnoyIndex(32, metric)  
+rock.load('/mnt/work/Music_Proj/rock.ann')
+pop = AnnoyIndex(32, metric)
+pop.load('/mnt/work/Music_Proj/pop.ann')
+indie = AnnoyIndex(32, metric)
+indie.load('/mnt/work/Music_Proj/indie.ann')
+female_vocalists = AnnoyIndex(32, metric)
+female_vocalists.load('/mnt/work/Music_Proj/female vocalists.ann')
+electronic = AnnoyIndex(32, metric)
+electronic.load('/mnt/work/Music_Proj/electronic.ann')
+alternative = AnnoyIndex(32, metric)
+alternative.load('/mnt/work/Music_Proj/alternative.ann')
 
 t1 = time.time()
 if __name__ == '__main__':
